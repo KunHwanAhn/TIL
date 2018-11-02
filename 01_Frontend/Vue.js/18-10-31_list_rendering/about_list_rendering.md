@@ -2,7 +2,7 @@
 - [Official Document](https://kr.vuejs.org/v2/guide/list.html)
 
 ## 개요
-본 문서는 Vue.js에서 `v-for`를 이용하여 List Rendering을 하는 법에 대한 문서 이다.
+본 문서는 Vue.js에서 `v-for`를 이용하여 List Rendering을 하는 법에 대한 문서이다.
 
 ## v-for
 angualr.js의 `ng-repeat`에 대응하는 Directive. ng-repeat처럼 Array 뿐만 아니라, Object도 처리할 수 있다.

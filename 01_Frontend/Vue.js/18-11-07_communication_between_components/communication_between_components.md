@@ -1,0 +1,2 @@
+# Communication between components
+

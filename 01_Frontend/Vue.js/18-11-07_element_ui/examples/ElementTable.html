@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+  <div id="app">
+    <el-table :data="pressList" stripe>
+      <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
+      <el-table-column label="언론사" width="180" align="center">
+        <template slot-scope="scope">
+          <span v-if="isEditMode[scope.row.id]">
+            <el-input v-model="inputData[scope.row.id].company"></el-input>
+          </span>
+          <span v-else>{{ scope.row.company }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="제목" header-align="center">
+        <template slot-scope="scope">
+          <span v-if="isEditMode[scope.row.id]">
+            <el-input v-model="inputData[scope.row.id].title"></el-input>
+            <el-input v-model="inputData[scope.row.id].url"></el-input>
+          </span>
+          <a v-else :href="scope.row.url" target="_blank">{{ scope.row.title }}</a>
+        </template>
+      </el-table-column>
+      <el-table-column label="보도일자" width="250" align="center">
+        <template slot-scope="scope">
+          <span v-if="isEditMode[scope.row.id]">
+            <el-date-picker v-model="inputData[scope.row.id].date" type="date" placeholder="Pick a day" value-format="yyyy-MM-dd"></el-date-picker>
+          </span>
+          <span v-else>{{ scope.row.date }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="수정하기" width="200" align="center">
+        <template slot-scope="scope">
+          <span v-if="isEditMode[scope.row.id]">
+            <el-button size="mini" type="primary" @click="updatePress(scope.row)">수정</el-button>
+            <el-button size="mini" @click="updateEditMode(scope.row, false)">취소</el-button>
+          </span>
+          <el-button v-else size="mini" type="primary" @click="updateEditMode(scope.row, true)">수정하기</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
+
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue@2.5.17/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return {
+          REQIRED_FIELDS: ['id', 'company', 'title', 'date'],
+          pressList: [],
+          isEditMode: {},
+          inputData: {}
+        }
+      },
+      methods: {
+        updateEditMode(press, isEditMode) {
+          if (isEditMode) {
+            this.inputData[press.id] = {...press
+            }
+          }
+
+          this.$set(this.isEditMode, press.id, isEditMode)
+        },
+        updatePress(press) {
+          const pressId = press.id
+          const reqBody = this.inputData[pressId]
+          let isValidInput = true
+
+          this.REQIRED_FIELDS.forEach(field => {
+            if (!reqBody[field]) {
+              isValidInput = false;
+            }
+          })
+
+          if (isValidInput) {
+            const press = this.pressList.find(press => press.id === pressId)
+            Object.keys(press).forEach(key => {
+              if (press[key] !== this.inputData[pressId][key]) {
+                press[key] = this.inputData[pressId][key]
+              }
+            })
+            this.updateEditMode(press, false)
+          } else {
+            this.$message.error('모든 입력값은 필수 입니다.');
+          }
+        }
+      },
+      created() {
+        this.pressList = [{
+          id: 4,
+          company: '언론사2',
+          title: '제목5',
+          url: 'https://www.google.com',
+          date: '2018-11-07'
+        }, {
+          id: 3,
+          company: '언론사1',
+          title: '제목4',
+          url: 'https://www.google.com',
+          date: '2018-11-07'
+        }, {
+          id: 2,
+          company: '언론사2',
+          title: '제목3',
+          url: 'https://www.google.com',
+          date: '2018-11-06'
+        }, {
+          id: 1,
+          company: '언론사1',
+          title: '제목2',
+          url: 'https://www.google.com',
+          date: '2018-11-05'
+        }, {
+          id: 0,
+          company: '언론사1',
+          title: '제목1',
+          url: 'https://www.google.com',
+          date: '2018-11-05'
+        }]
+      },
+    })
+  </script>
+</body>
+
+</html>

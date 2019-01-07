@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+  <div id="app">
+    <el-form :model="inputData" :rules="inputRules" ref="inputForm" label-width="100px">
+      <el-form-item label="활성화" prop="activated">
+        <el-checkbox-group v-model="inputData.activated">
+          <el-checkbox name="activated"></el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+
+      <el-form-item label="언론사" prop="company">
+        <el-input v-model="inputData.company" placeholder="언론사 입력"></el-input>
+      </el-form-item>
+
+      <el-form-item label="제목" prop="title">
+        <el-input v-model="inputData.title" placeholder="제목 입력"></el-input>
+      </el-form-item>
+
+      <el-form-item label="보도일자" prop="date">
+        <el-date-picker v-model="inputData.date" type="date" placeholder="Pick a day" value-format="yyyy-MM-dd"></el-date-picker>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="submit">추가</el-button>
+        <el-button @click="reset">취소</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue@2.5.17/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          inputData: {},
+          inputRules: {}
+        }
+      },
+      created() {
+        this.inputRules = {
+          company: [{
+            required: true,
+            message: '언론사는 필수입니다.',
+            trigger: 'blur'
+          }],
+          title: [{
+            required: true,
+            message: '제목은 필수입니다.',
+            trigger: 'blur'
+          }],
+          date: [{
+            required: true,
+            message: '보도일자는 필수입니다.',
+            trigger: 'blur'
+          }]
+        }
+      },
+      methods: {
+        submit() {
+          this.$refs['inputForm'].validate(valid => {
+            if (valid) {
+              this.reset()
+              this.$message.success('등록했습니다.')
+            } else {
+              this.$message.error('모든 입력값은 필수 입니다.')
+            }
+          })
+
+        },
+        reset() {
+          this.$refs['inputForm'].resetFields()
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
